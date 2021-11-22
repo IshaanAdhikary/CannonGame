@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     public bool hasLaunched = false;
     public bool isDead = false;
     public bool isCharging = false;
+    public bool isCooldown = false;
     public bool isPaused = false;
     public float runSpeed;
     public float maxLaunch;
@@ -27,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     private Image darkImg;
     private float inputX = 0f;
     private float launchPower = 0f;
+    private float cooldownTimer = 0f;
     private bool canMove = true;
     private bool simMove = true;
     private bool canLaunch = true;
@@ -52,6 +54,19 @@ public class PlayerMovement : MonoBehaviour
             controller.FaceMouse(mouseFacePoint.x);
             launchPower += 0.33f * Time.deltaTime;
             powerBar.SetPower(launchPower);
+        }
+        if (isCooldown)
+        {
+            canLaunch = false;
+            cooldownTimer -= 0.5f * Time.deltaTime;
+            powerBar.SetCooldown(cooldownTimer);
+            if (cooldownTimer <= 0)
+            {
+                isCooldown = false;
+                cooldownTimer = 0;
+                canLaunch = true;
+                powerBarObj.SetActive(false);
+            }
         }
 
         animator.SetFloat("Speed", Mathf.Abs(inputX));
@@ -80,9 +95,12 @@ public class PlayerMovement : MonoBehaviour
         // Launch If Called For
         if (doLaunch)
         {
+            powerBar.SetPower(0);
             hasLaunched = true;
             controller.m_AirControl = false;
             controller.LaunchTowards(launchToPoint, launchPower * maxLaunch);
+            cooldownTimer = launchPower;
+            isCooldown = true;
             launchPower = 0f;
             canMove = true;
         }
@@ -147,14 +165,12 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (context.performed && canLaunch)
         {
-            powerBarObj.SetActive(false);
             arrowSprite.SetActive(false);
             isCharging = false;
             doLaunch = true;
         }
         else if (context.canceled && canLaunch)
         {
-            powerBarObj.SetActive(false);
             arrowSprite.SetActive(false);
             isCharging = false;
             doLaunch = true;
