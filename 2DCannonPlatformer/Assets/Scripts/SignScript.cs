@@ -5,6 +5,7 @@ using TMPro;
 
 public class SignScript : MonoBehaviour
 {
+    [TextArea(4, 10)]
     public string DisplayText;
     public GameObject TextBox;
     public TextMeshProUGUI SignText;
@@ -13,17 +14,17 @@ public class SignScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.tag == "Player" && !hasBeenTriggered)
+        if (collider.CompareTag("Player") && !hasBeenTriggered)
         {
+            hasBeenTriggered = true;
             SignText.text = DisplayText;
             TextBox.SetActive(true);
-            hasBeenTriggered = true;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collider)
     {
-        if (collider.tag == "Player")
+        if (collider.CompareTag("Player"))
         {
             TextBox.SetActive(false);
             hasBeenTriggered = false;

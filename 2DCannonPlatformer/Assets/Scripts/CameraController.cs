@@ -10,11 +10,15 @@ public class CameraController : MonoBehaviour
     public float cameraSnapSpeed;
 
     private PlayerMovement PlayerMovement;
+    private Camera cam;
     private Vector3 cameraOffset;
-    private Vector3 velocity = Vector3.zero;
+    private Vector3 moveVelocity = Vector3.zero;
+    private float scaleVelocity = 0;
+    private float newScale2D;
 
     void Start()
     {
+        cam = Camera.main;
         PlayerMovement = player.GetComponent<PlayerMovement>();
         cameraOffset = new Vector3(0, 0, PlayerMovement.camOffset);
     }
@@ -29,8 +33,19 @@ public class CameraController : MonoBehaviour
             targetPos = transform.position - cameraOffset;
         }
 
-        Vector3 newPos2D = Vector3.SmoothDamp(transform.position - cameraOffset, targetPos, ref velocity, cameraSnapSpeed);
+        Vector3 newPos2D = Vector3.SmoothDamp(transform.position - cameraOffset, targetPos, ref moveVelocity, cameraSnapSpeed);
         transform.position = newPos2D + cameraOffset;
+
+        if (PlayerMovement.isCharging)
+        {
+            newScale2D = Mathf.SmoothDamp(cam.orthographicSize, 5f, ref scaleVelocity, 1);
+        }
+        else
+        {
+            newScale2D = Mathf.SmoothDamp(cam.orthographicSize, 4f, ref scaleVelocity, 0.4f);
+        }
+
+        cam.orthographicSize = newScale2D;
 
         // Move Background with Camera
         background.transform.position = transform.position + new Vector3(0, 0, -PlayerMovement.camOffset);

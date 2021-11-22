@@ -13,10 +13,12 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController2D controller;
     public PowerBar powerBar;
     public Animator animator;
+    public Animator pauseAnimator;
     public GameObject arrowSprite;
     public GameObject powerBarObj;
     public bool hasLaunched = false;
     public bool isDead = false;
+    public bool isCharging = false;
     public bool isPaused = false;
     public float runSpeed;
     public float maxLaunch;
@@ -28,7 +30,6 @@ public class PlayerMovement : MonoBehaviour
     private bool canMove = true;
     private bool simMove = true;
     private bool canLaunch = true;
-    private bool isCharging = false;
     private bool doJump = false;
     private bool doLaunch = false;
     private Camera mainCam;
@@ -111,7 +112,7 @@ public class PlayerMovement : MonoBehaviour
             arrowSprite.transform.localScale = new Vector3(0.15f, 0.15f, 1);
         }
 
-        if (transform.position.y < -20)
+        if (transform.position.y < -20 && !isDead)
         {
             KillPlayer();
         }
@@ -186,14 +187,21 @@ public class PlayerMovement : MonoBehaviour
         {
             Time.timeScale = 0f;
             darkenedScreen.SetActive(true);
-            pausePanel.SetActive(true);
+            pauseAnimator.SetBool("isOpen", true);
         }
         else
         {
-            Time.timeScale = 1f;
-            darkenedScreen.SetActive(false);
-            pausePanel.SetActive(false);
+            pauseAnimator.SetBool("isOpen", false);
+            StartCoroutine("Resume");
         }
+    }
+
+    IEnumerator Resume()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
+        Time.timeScale = 1f;
+        darkenedScreen.SetActive(false);
+        yield return null;
     }
 
     public void GoToMenu()
