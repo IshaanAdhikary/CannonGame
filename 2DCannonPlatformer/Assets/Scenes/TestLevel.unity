@@ -7793,7 +7793,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1417042914}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PhysicsItems
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9412,7 +9412,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1979567879}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Platforms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9823,7 +9823,7 @@ GameObject:
   - component: {fileID: 3569505672959869957}
   - component: {fileID: 3452576937809885691}
   - component: {fileID: 3569505672959869958}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Crate
   m_TagString: Untagged
   m_Icon: {fileID: 0}

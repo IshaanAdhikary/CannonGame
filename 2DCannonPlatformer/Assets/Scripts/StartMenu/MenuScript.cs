@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public class MenuScript : MonoBehaviour
     public TMP_Dropdown graphicsDropdown;
 
     private Scene scene;
+    private Resolution[] resolutionsRaw;
     private Resolution[] resolutions;
     private int currentGraphicsIndex;
 
@@ -18,7 +20,8 @@ public class MenuScript : MonoBehaviour
     {
         scene = SceneManager.GetActiveScene();
 
-        resolutions = Screen.resolutions;
+        resolutionsRaw = Screen.resolutions;
+        resolutions = resolutionsRaw.Distinct().ToArray();
         currentGraphicsIndex = QualitySettings.GetQualityLevel();
 
         List<string> options = new List<string>();
