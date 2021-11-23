@@ -167,6 +167,13 @@ public class CharacterController2D : MonoBehaviour
     {
 		return m_Rigidbody2D.velocity.y;
     }
+	
+	public bool MovingAcceptable()
+    {
+		float speed = m_Rigidbody2D.velocity.y;
+		if (speed > 3.25f){ return true; }
+        else { return false; }
+    }
 
 	private void Flip()
 	{

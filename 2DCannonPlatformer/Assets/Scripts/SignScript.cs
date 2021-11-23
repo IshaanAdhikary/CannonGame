@@ -12,6 +12,11 @@ public class SignScript : MonoBehaviour
 
     private bool hasBeenTriggered = false;
 
+    private void Start()
+    {
+        DisplayText = DisplayText.Replace("\\n", "\n");
+    }
+
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.CompareTag("Player") && !hasBeenTriggered)

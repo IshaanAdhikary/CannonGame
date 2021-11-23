@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
@@ -51,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
         // Tick Timer For Power If Charging
         if (isCharging)
         {
+            powerBarObj.SetActive(true);
             controller.FaceMouse(mouseFacePoint.x);
             launchPower += 0.33f * Time.deltaTime;
             powerBar.SetPower(launchPower);
@@ -103,6 +105,7 @@ public class PlayerMovement : MonoBehaviour
             isCooldown = true;
             launchPower = 0f;
             canMove = true;
+            StartCoroutine(CheckForLaunch());
         }
 
 
@@ -156,24 +159,26 @@ public class PlayerMovement : MonoBehaviour
 
     public void Launch(InputAction.CallbackContext context)
     {
-        if (context.started && canLaunch)
+        if (canLaunch)
         {
-            powerBarObj.SetActive(true);
-            arrowSprite.SetActive(true);
-            isCharging = true;
-            canMove = false;
-        }
-        else if (context.performed && canLaunch)
-        {
-            arrowSprite.SetActive(false);
-            isCharging = false;
-            doLaunch = true;
-        }
-        else if (context.canceled && canLaunch)
-        {
-            arrowSprite.SetActive(false);
-            isCharging = false;
-            doLaunch = true;
+            if (context.started && !EventSystem.current.IsPointerOverGameObject())
+            {
+                arrowSprite.SetActive(true);
+                isCharging = true;
+                canMove = false;
+            }
+            else if (context.performed)
+            {
+                arrowSprite.SetActive(false);
+                isCharging = false;
+                doLaunch = true;
+            }
+            else if (context.canceled)
+            {
+                arrowSprite.SetActive(false);
+                isCharging = false;
+                doLaunch = true;
+            }
         }
     }
 
@@ -238,5 +243,12 @@ public class PlayerMovement : MonoBehaviour
         controller.TiltChar();
 
         deadScreen.SetActive(true);
+    }
+
+    IEnumerator CheckForLaunch()
+    {
+        yield return new WaitForFixedUpdate();
+        hasLaunched = controller.MovingAcceptable();
+        controller.m_AirControl = !controller.MovingAcceptable();
     }
 }
