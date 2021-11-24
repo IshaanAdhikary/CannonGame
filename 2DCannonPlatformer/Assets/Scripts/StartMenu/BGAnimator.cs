@@ -66,7 +66,7 @@ public class BGAnimator : MonoBehaviour
             if (direction > 0 && rb.transform.position.x > jumpAt && shouldJump) { doJump = true; jumpAt = 1000; }
             else if (direction < 0 && rb.transform.position.x < jumpAt && shouldJump) { doJump = true; jumpAt = -1000; }
 
-            controller.Move(60 * direction * Time.fixedDeltaTime, false, doJump);
+            controller.Move(60 * direction * Time.fixedDeltaTime, doJump, false);
             yield return new WaitForFixedUpdate();
         }
         direction = direction * -1;

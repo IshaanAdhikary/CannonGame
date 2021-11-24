@@ -35,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
     private bool canLaunch = true;
     private bool doJump = false;
     private bool doLaunch = false;
+    private bool onIce = true;
     private Camera mainCam;
 
     // Start is called before the first frame update
@@ -75,6 +76,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("VerticalSpeed", controller.GetVertSpeed());
         animator.SetBool("inAir", !controller.m_Grounded);
         animator.SetBool("isDead", isDead);
+        animator.SetBool("isCharging", isCharging);
     }
 
     // FixedUpdate is called a set amount a second
@@ -87,11 +89,11 @@ public class PlayerMovement : MonoBehaviour
         // Use CharController Script to Move If Enabled
         if (canMove)
         {
-            controller.Move(inputX * Time.fixedDeltaTime, false, doJump);
+            controller.Move(inputX * Time.fixedDeltaTime, doJump, onIce);
         }
         else if (simMove)
         {
-            controller.Move(0, false, false);
+            controller.Move(0, false, onIce);
         }
 
         // Launch If Called For
