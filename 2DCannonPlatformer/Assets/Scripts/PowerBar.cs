@@ -2,18 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class PowerBar : MonoBehaviour
 {
     public Image powerBarFill;
     public Image cooldownBarFill;
 
-    private Image[] childrenImg;
-
-    private void Awake()
-    {
-        childrenImg = GetComponentsInChildren<Image>();
-    }
+    public Image[] childrenImg;
 
     public void SetPower(float power)
     {
@@ -29,10 +25,10 @@ public class PowerBar : MonoBehaviour
 
     private void setAlpha(float alpha)
     {
-        Color newColor;
-
         foreach (Image img in childrenImg)
         {
+            Color newColor;
+
             newColor = img.color;
             newColor.a = alpha;
             img.color = newColor;

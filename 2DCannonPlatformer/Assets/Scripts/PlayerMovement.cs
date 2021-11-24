@@ -11,12 +11,10 @@ public class PlayerMovement : MonoBehaviour
     public GameObject darkenedScreen;
     public GameObject deadScreen;
     public GameObject pausePanel;
-    public CharacterController2D controller;
-    public PowerBar powerBar;
-    public Animator animator;
-    public Animator pauseAnimator;
     public GameObject arrowSprite;
     public GameObject powerBarObj;
+    public Animator animator;
+    public Animator pauseAnimator;
     public bool hasLaunched = false;
     public bool isDead = false;
     public bool isCharging = false;
@@ -27,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
     public float camOffset;
 
     private Image darkImg;
+    private CharacterController2D controller;
+    private PowerBar powerBar;
     private float inputX = 0f;
     private float launchPower = 0f;
     private float cooldownTimer = 0f;
@@ -34,15 +34,18 @@ public class PlayerMovement : MonoBehaviour
     private bool simMove = true;
     private bool canLaunch = true;
     private bool doJump = false;
-    private bool doLaunch = false;
-    private bool onIce = true;
+    private bool onIce = false;
+    private Vector3 launchToPoint;
     private Camera mainCam;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        controller = GetComponent<CharacterController2D>();
+        powerBar = powerBarObj.GetComponent<PowerBar>();
         mainCam = Camera.main;
         darkImg = darkenedScreen.GetComponent<Image>();
+        powerBar.childrenImg = powerBarObj.GetComponentsInChildren<Image>();
     }
 
     // Update is called once a frame
@@ -58,7 +61,7 @@ public class PlayerMovement : MonoBehaviour
             launchPower += 0.33f * Time.deltaTime;
             powerBar.SetPower(launchPower);
         }
-        if (isCooldown)
+        else if (isCooldown)
         {
             canLaunch = false;
             cooldownTimer -= 0.5f * Time.deltaTime;
@@ -82,7 +85,6 @@ public class PlayerMovement : MonoBehaviour
     // FixedUpdate is called a set amount a second
     void FixedUpdate()
     {
-        Vector3 launchToPoint;
         launchToPoint = mainCam.ScreenToWorldPoint(new Vector2(Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue()));
         launchToPoint = launchToPoint + new Vector3(0, 0, -camOffset);
 
@@ -95,21 +97,6 @@ public class PlayerMovement : MonoBehaviour
         {
             controller.Move(0, false, onIce);
         }
-
-        // Launch If Called For
-        if (doLaunch)
-        {
-            powerBar.SetPower(0);
-            hasLaunched = true;
-            controller.m_AirControl = false;
-            controller.LaunchTowards(launchToPoint, launchPower * maxLaunch);
-            cooldownTimer = launchPower;
-            isCooldown = true;
-            launchPower = 0f;
-            canMove = true;
-            StartCoroutine(CheckForLaunch());
-        }
-
 
         // Move Arrow In Circle
         Vector3 mousePos = new Vector3(Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue(), 0);
@@ -140,16 +127,20 @@ public class PlayerMovement : MonoBehaviour
             KillPlayer();
         }
 
-        // Reset Calls
+        // Reset Single-Use Variables
         doJump = false;
-        doLaunch = false;
+        onIce = false;
     }
 
-    private void OnCollisionEnter2D(Collision2D col)
+    private void OnCollisionStay2D(Collision2D col)
     {
         if (col.gameObject.CompareTag("Death"))
         {
             KillPlayer();
+        }
+        if (col.gameObject.CompareTag("Icy"))
+        {
+            onIce = true;
         }
     }
 
@@ -173,13 +164,13 @@ public class PlayerMovement : MonoBehaviour
             {
                 arrowSprite.SetActive(false);
                 isCharging = false;
-                doLaunch = true;
+                LaunchPlayer(launchToPoint);
             }
             else if (context.canceled)
             {
                 arrowSprite.SetActive(false);
                 isCharging = false;
-                doLaunch = true;
+                LaunchPlayer(launchToPoint);
             }
         }
     }
@@ -245,6 +236,19 @@ public class PlayerMovement : MonoBehaviour
         controller.TiltChar();
 
         deadScreen.SetActive(true);
+    }
+
+    private void LaunchPlayer(Vector3 launchToPoint)
+    {
+        powerBar.SetPower(0f);
+        hasLaunched = true;
+        controller.m_AirControl = false;
+        controller.LaunchTowards(launchToPoint, launchPower * maxLaunch);
+        cooldownTimer = launchPower;
+        isCooldown = true;
+        launchPower = 0f;
+        canMove = true;
+        StartCoroutine(CheckForLaunch());
     }
 
     IEnumerator CheckForLaunch()
