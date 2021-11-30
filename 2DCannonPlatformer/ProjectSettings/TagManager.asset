@@ -7,6 +7,7 @@ TagManager:
   - ArrowUI
   - Death
   - Icy
+  - Bouncy
   layers:
   - Default
   - TransparentFX
