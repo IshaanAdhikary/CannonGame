@@ -35,7 +35,6 @@ public class PlayerMovement : MonoBehaviour
     private bool canLaunch = true;
     private bool doJump = false;
     private bool onIce = false;
-    private bool doIcy = false;
     private Vector3 launchToPoint;
     private Camera mainCam;
 
@@ -51,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
 
     // Update is called once a frame
     void Update()
-    {
+    {   
         Vector2 mouseFacePoint = mainCam.ScreenToWorldPoint(new Vector2(Mouse.current.position.x.ReadValue(), 0));
 
         // Tick Timer For Power If Charging
@@ -92,14 +91,27 @@ public class PlayerMovement : MonoBehaviour
         // Use CharController Script to Move If Enabled
         if (canMove)
         {
-            controller.Move(inputX * Time.fixedDeltaTime, doJump, doIcy);
+            controller.Move(inputX * Time.fixedDeltaTime, doJump, onIce);
         }
         else if (simMove)
         {
-            controller.Move(0, false, doIcy);
+            controller.Move(0, false, onIce);
         }
 
-        MoveArrow();
+        // Move Arrow In Circle
+        Vector3 mousePos = new Vector3(Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue(), 0);
+        mousePos = Camera.main.ScreenToWorldPoint(mousePos) - new Vector3(0, 0, camOffset);
+        mousePos = transform.InverseTransformPoint(mousePos);
+        mousePos = mousePos.normalized;
+        arrowSprite.transform.localPosition = mousePos;
+
+        // Rotate Arrow To Mouse
+        Vector3 mousePosRot = new Vector3(Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue(), 0);
+        Vector3 objectPos = Camera.main.WorldToScreenPoint(transform.position);
+        mousePosRot.x = mousePosRot.x - objectPos.x;
+        mousePosRot.y = mousePosRot.y - objectPos.y;
+        float angle = Mathf.Atan2(mousePosRot.y, mousePosRot.x) * Mathf.Rad2Deg;
+        arrowSprite.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
 
         if (!controller.m_FacingRight)
         {
@@ -128,24 +140,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (col.gameObject.CompareTag("Icy"))
         {
-            doIcy = true;
             onIce = true;
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D col)
-    {
-        if (col.gameObject.CompareTag("Bouncy") && controller.GetVertSpeed() < 2.5f)
-        {
-            controller.StopJitter();
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D col)
-    {
-        if (col.gameObject.CompareTag("Icy"))
-        {
-            StartCoroutine(DisableIce());
         }
     }
 
@@ -254,34 +249,6 @@ public class PlayerMovement : MonoBehaviour
         launchPower = 0f;
         canMove = true;
         StartCoroutine(CheckForLaunch());
-    }
-
-    private void MoveArrow()
-    {
-        // Move Arrow In Circle
-        Vector3 mousePos = new Vector3(Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue(), 0);
-        mousePos = Camera.main.ScreenToWorldPoint(mousePos) - new Vector3(0, 0, camOffset);
-        mousePos = transform.InverseTransformPoint(mousePos);
-        mousePos = mousePos.normalized;
-        arrowSprite.transform.localPosition = mousePos;
-
-        // Rotate Arrow To Mouse
-        Vector3 mousePosRot = new Vector3(Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue(), 0);
-        Vector3 objectPos = Camera.main.WorldToScreenPoint(transform.position);
-        mousePosRot.x = mousePosRot.x - objectPos.x;
-        mousePosRot.y = mousePosRot.y - objectPos.y;
-        float angle = Mathf.Atan2(mousePosRot.y, mousePosRot.x) * Mathf.Rad2Deg;
-        arrowSprite.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-    }
-
-    IEnumerator DisableIce()
-    {
-        yield return new WaitForSeconds(0.5f);
-        
-        if (!onIce)
-        {
-            doIcy = false;
-        }
     }
 
     IEnumerator CheckForLaunch()

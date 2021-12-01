@@ -64,7 +64,6 @@ public class CharacterController2D : MonoBehaviour
 			Vector3 targetVelocity = new Vector2(move * 10f, m_Rigidbody2D.velocity.y);
 			if (onIce && move == 0) { targetVelocity.x = prevVelocity.x * 0.94f; }
 			else if (onIce) { targetVelocity.x = targetVelocity.x * 0.17f + prevVelocity.x * 0.83f; }
-
 			// And then smoothing it out and applying it to the character}
 			m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
 
@@ -96,12 +95,6 @@ public class CharacterController2D : MonoBehaviour
     {
 		m_Rigidbody2D.AddForce((launch - m_PlayerPos.position).normalized * magnitude);
 	}
-
-	public void StopJitter()
-    {
-		m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0);
-		Debug.Log("FREEZE IN THE NAME OF LOVE");
-    }
 
 	public void FaceMouse(float mouseXPos)
     {
