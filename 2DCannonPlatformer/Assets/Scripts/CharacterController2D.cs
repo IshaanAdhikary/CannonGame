@@ -100,7 +100,6 @@ public class CharacterController2D : MonoBehaviour
 	public void StopJitter()
     {
 		m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0);
-		Debug.Log("FREEZE IN THE NAME OF LOVE");
     }
 
 	public void FaceMouse(float mouseXPos)
