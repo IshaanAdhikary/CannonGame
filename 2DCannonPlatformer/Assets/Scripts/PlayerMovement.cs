@@ -121,7 +121,11 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D col)
     {
         // If the player is barely bouncing, stop bouncing.
-        if (col.gameObject.CompareTag("Bouncy") && controller.GetVertSpeed() < 4.2f) { controller.StopJitter(); }
+        if (col.gameObject.CompareTag("Bouncy") && controller.GetVertSpeed() < 4.2f)
+        {
+            controller.StopJitter();
+            hasLaunched = false;
+        }
     }
 
     // Called when ground is hit, Event is based off of CharController Script
@@ -140,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
     // Take Launch Input from New Input System
     public void Launch(InputAction.CallbackContext context)
     {
-        if (canLaunch)
+        if (canLaunch && controller.m_Grounded)
         {
             if (context.started && !EventSystem.current.IsPointerOverGameObject())
             {
