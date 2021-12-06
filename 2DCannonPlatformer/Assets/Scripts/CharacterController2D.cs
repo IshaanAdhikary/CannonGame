@@ -108,6 +108,17 @@ public class CharacterController2D : MonoBehaviour
 		m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0);
     }
 
+	public void Freeze()
+    {
+		m_Rigidbody2D.velocity = Vector2.zero;
+		m_Rigidbody2D.gravityScale = 0f;
+    }
+
+	public void UnFreeze()
+    {
+		m_Rigidbody2D.gravityScale = 3f;
+	}
+
 	public void FaceMouse(float mouseXPos)
     {
 		if (mouseXPos < m_PlayerPos.position.x && m_FacingRight)

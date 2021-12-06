@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6751531017609762428}
   m_Layer: 10
   m_Name: Mace
-  m_TagString: Death
+  m_TagString: SimulatedDeath
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

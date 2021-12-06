@@ -9,6 +9,8 @@ TagManager:
   - Icy
   - Bouncy
   - Sticky
+  - SimulatedDeath
+  - Simulated
   layers:
   - Default
   - TransparentFX

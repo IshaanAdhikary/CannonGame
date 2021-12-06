@@ -111,11 +111,16 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionStay2D(Collision2D col)
     {
         // Kill player if they touch Death
-        if (col.gameObject.CompareTag("Death")) { KillPlayer(); }
+        if (col.gameObject.CompareTag("Death") || col.gameObject.CompareTag("SimulatedDeath")) { KillPlayer(); }
 
         // Icy movement enabled if they touch Icy
         if (col.gameObject.CompareTag("Icy")) { onIce = true; }
         else { onIce = false; }
+
+        if (col.gameObject.CompareTag("Sticky"))
+        {
+            controller.Freeze();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D col)
