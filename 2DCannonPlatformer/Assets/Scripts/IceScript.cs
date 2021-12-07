@@ -17,7 +17,7 @@ public class IceScript : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D col)
     {
-        if (col.gameObject.CompareTag("Simulated"))
+        if (col.gameObject.CompareTag("Simulated") || col.gameObject.CompareTag("SimulatedDeath"))
         {
             if (col.otherCollider)
             {

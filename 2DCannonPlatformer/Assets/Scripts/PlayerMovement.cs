@@ -119,7 +119,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (col.gameObject.CompareTag("Sticky"))
         {
-            controller.Freeze();
+            
         }
     }
 

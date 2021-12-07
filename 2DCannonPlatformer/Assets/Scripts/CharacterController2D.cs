@@ -58,6 +58,8 @@ public class CharacterController2D : MonoBehaviour
 					OnLandEvent.Invoke();
 			}
 		}
+
+		if(!player.hasLaunched){ m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, Mathf.Clamp(m_Rigidbody2D.velocity.y, -30, 30)); }
 	}
 
 
@@ -107,17 +109,6 @@ public class CharacterController2D : MonoBehaviour
     {
 		m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0);
     }
-
-	public void Freeze()
-    {
-		m_Rigidbody2D.velocity = Vector2.zero;
-		m_Rigidbody2D.gravityScale = 0f;
-    }
-
-	public void UnFreeze()
-    {
-		m_Rigidbody2D.gravityScale = 3f;
-	}
 
 	public void FaceMouse(float mouseXPos)
     {
