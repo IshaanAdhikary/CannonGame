@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class ChainBuilderScript : MonoBehaviour
 {
-    public enum ChainEnd { Nothing, Mace }
+    public enum ChainEnd { Nothing, Mace, Fixed }
+    public ChainEnd Ending;
     public GameObject chainHub;
     public GameObject chainType1;
     public GameObject chainType2;
+    public GameObject maceEnd;
     public int chainLength;
 
-    private ChainEnd ending;
     private Rigidbody2D prevRB;
 
     public void BuildChain()
     {
-        ending = ChainEnd.Nothing;
         GameObject cap = Instantiate(chainHub, transform.position, Quaternion.identity);
         cap.transform.parent = gameObject.transform;
         prevRB = cap.GetComponent<Rigidbody2D>();
@@ -37,10 +37,19 @@ public class ChainBuilderScript : MonoBehaviour
             prevRB = hinge2.attachedRigidbody;
         }
 
-        switch (ending)
+        switch (Ending)
         {
+            case ChainEnd.Nothing:
+                break;
             case ChainEnd.Mace:
-                Debug.Log("Mace");
+                GameObject Mace = Instantiate(maceEnd, prevRB.position + new Vector2(0, -0.93f), Quaternion.identity);
+                Mace.transform.parent = gameObject.transform;
+                HingeJoint2D maceHinge = Mace.GetComponent<HingeJoint2D>();
+                maceHinge.connectedBody = prevRB;
+                break;
+            case ChainEnd.Fixed:
+                GameObject FixedPoint = Instantiate(maceEnd, prevRB.position + new Vector2(0, -0.25f), Quaternion.identity);
+
                 break;
         }
     }
