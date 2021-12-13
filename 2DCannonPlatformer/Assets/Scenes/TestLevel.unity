@@ -5310,7 +5310,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1006268213
 Transform:
   m_ObjectHideFlags: 0
@@ -9390,7 +9390,7 @@ MonoBehaviour:
     type: 3}
   chainType2: {fileID: 6784259735714250296, guid: 8c97be2bbe94b2d408319d442f94a42e,
     type: 3}
-  chainLength: 0
+  chainLength: 4
 --- !u!4 &1118664862 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5011342901567824127, guid: c90c514727b066c4cae359340a3fb5fe,
@@ -11428,7 +11428,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 3
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 58238ac3a78f8284484121dc64065c9e, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
