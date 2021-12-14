@@ -15,11 +15,13 @@ public class PlayerMovement : MonoBehaviour
     public GameObject powerBarObj;
     public Animator animator;
     public Animator pauseAnimator;
+
     public bool hasLaunched = false;
     public bool isDead = false;
     public bool isCharging = false;
     public bool isCooldown = false;
     public bool isPaused = false;
+
     public float runSpeed;
     public float maxLaunch;
     public float camOffset;
@@ -32,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     private bool canLaunch = true;
     private bool doJump = false;
     private bool onIce = false;
+    private bool onSticky = false;
     private Vector3 launchToPoint;
     private Camera mainCam;
 
@@ -79,6 +82,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("inAir", !controller.m_Grounded);
         animator.SetBool("isDead", isDead);
         animator.SetBool("isCharging", isCharging);
+        animator.SetBool("onSticky", onSticky);
     }
 
     // FixedUpdate is called a set amount a second
@@ -89,8 +93,8 @@ public class PlayerMovement : MonoBehaviour
         launchToPoint = launchToPoint + new Vector3(0, 0, -camOffset);
 
         // Check if the player should control the character
-        bool canMove = !isDead && !isCharging;
-        bool simMove = !isDead;
+        bool canMove = !isDead && !isCharging && !onSticky;
+        bool simMove = !isDead && !onSticky;
 
         // Use CharController Script to Move If Enabled
         if (canMove) { controller.Move(inputX * Time.fixedDeltaTime, doJump, onIce); }
@@ -119,7 +123,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (col.gameObject.CompareTag("Sticky"))
         {
-            
+            onSticky = true;
+        }
+        else
+        {
+            onSticky = false;
         }
     }
 

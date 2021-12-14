@@ -21,7 +21,6 @@ public class StickyScript : MonoBehaviour
         if (playerScript.hasLaunched)
         {
             fixedJoint.enabled = false;
-            Debug.Log("Disabled Joint");
         }
     }
 
@@ -30,7 +29,6 @@ public class StickyScript : MonoBehaviour
         if (col.gameObject.CompareTag("Player"))
         {
             fixedJoint.enabled = true;
-            Debug.Log("Enabled Joint");
         }
     }
 }
