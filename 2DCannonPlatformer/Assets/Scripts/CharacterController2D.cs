@@ -43,7 +43,10 @@ public class CharacterController2D : MonoBehaviour
 		LayerMask WhatIsGroundNow = m_WhatIsGround;
 
 		// If player has launched, bouncy no longer is ground.
-		if (player.hasLaunched) { WhatIsGroundNow = WhatIsGroundNow ^ (1 << LayerMask.NameToLayer("Bouncy")); }
+		if (player)
+        {
+			if (player.hasLaunched) { WhatIsGroundNow = WhatIsGroundNow ^ (1 << LayerMask.NameToLayer("Bouncy")); }
+		}
 
 		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
 		// This can be done using layers instead but Sample Assets will not overwrite your project settings.
@@ -59,7 +62,10 @@ public class CharacterController2D : MonoBehaviour
 			}
 		}
 
-		if(!player.hasLaunched){ m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, Mathf.Clamp(m_Rigidbody2D.velocity.y, -30, 30)); }
+		if (player)
+        {
+			if (!player.hasLaunched) { m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, Mathf.Clamp(m_Rigidbody2D.velocity.y, -30, 30)); }
+		}
 	}
 
 

@@ -23,6 +23,7 @@ public class BGAnimator : MonoBehaviour
         animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
         animator.SetFloat("VerticalSpeed", controller.GetVertSpeed());
         animator.SetBool("inAir", !controller.m_Grounded);
+        animator.SetBool("onSticky", true);
     }
 
     // Set a spark...
